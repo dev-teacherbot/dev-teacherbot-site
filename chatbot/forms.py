@@ -12,7 +12,7 @@ class chatbot_form(ModelForm):
 		model = cbot
 		fields = ['title','pandora_name','enabled','twit_hashtags','twit_token',
 		'twit_token_secret','twit_c_key','twit_c_secret','aiml_config']
-		exclude = ('author','enabled')
+		exclude = ('author','enabled','twit_hashtags', 'twit_token','twit_token_secret', 'twit_c_key', 'twit_c_secret')
 		help_texts = {
 		'title': 'A descriptive title that lets you identify your chatbot.',
 		'pandora_name' : 'This is the name of your pandora bot. This name must be unique, and is only viewable to yourself; so picking a descriptive name is advised. The name should be all lowercase alphabetic characters - no spaces, underscores, dashes, or other characters will be accepted',

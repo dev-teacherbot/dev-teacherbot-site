@@ -20,12 +20,11 @@ import os.path
 ###################### CHATBOT PAGES ###########################
 
 @login_required
-def index(request):
-    """ Display our index of items owned by the viewing user """
+def bot_hub(request):
+    """ Display the bots owned by the viewing user """
     context = RequestContext(request)
     context['chatbots'] = cbot.objects.user(request)
-    context['aiml_configs'] = aiml_config.objects.user(request)
-    return render_to_response('index.html', context)
+    return render_to_response('bot_hub.html', context)
 
 @login_required
 def add(request):
@@ -282,12 +281,23 @@ def file_add_new(request):
 ################################################################
 ###################### AIML Wizard #############################
 def aiml_wizard(request):
-    return render(request, 'aimlwizard/aiml_wizard_home.html')
+    context = RequestContext(request)
+    context['aiml_configs'] = aiml_config.objects.user(request)
+    return render_to_response('aimlwizard/aiml_wizard_home.html', context)
+
+def add_aiml_setup(request):
+    pass
+
+def remove_aiml_setup(request):
+    pass
 
 
 
 ################################################################
 ###################### STATIC PAGES ############################
+
+def index(request):
+    return render(request, 'index.html')
 
 def twitter_guide(request):
     return render(request, 'information/twitter_guide.html')

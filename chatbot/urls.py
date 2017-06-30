@@ -19,6 +19,7 @@ urlpatterns = [
 	url(r'^playground-guide/$', views.playground_guide, name='playground_guide'),
 	url(r'^first-setup-guide/$', views.first_setup_guide, name='first_setup_guide'),
 	url(r'^get-started/$', views.get_started, name='get_started'),
+    url(r'^bot-hub/$', views.bot_hub, name='bot_hub'),
     
 	# File Manager 
 	url(r'^file-manager/$', views.file_manager, name='file_manager'),
@@ -31,8 +32,8 @@ urlpatterns = [
 	# Twitter Actions
 	url(r'^(?P<cbot_id>[0-9]+)/twit-check/$', views.check_twitter_auth, name='twit_check'),
     
-    # Starter Bot
-    url(r'^create_a_bot$', views.starter_bot, name='starter_bot'),
+    # AIML Wizard
+    url(r'^aiml_wizard/$', views.aiml_wizard, name='aiml_wizard'),
     
 	# Internal Actions 
 	url(r'^(?P<cbot_id>[0-9]+)/bot-enabled/$', views.chatbot_activate_toggle, name='chatbot_toggle'),
