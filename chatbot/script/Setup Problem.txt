@@ -1,0 +1,18 @@
+11:53:22
+Traceback (most recent call last):
+  File "/home/teacherdev/public_html/tb_development/chatbot/script/twitter_bot.py", line 155, in <module>
+    tweet_dict, auth, twitter_api, me, my_id, my_screen_name, tweet_log = setup()
+  File "/home/teacherdev/public_html/tb_development/chatbot/script/twitter_bot.py", line 132, in setup
+    me = twitter_api.me()
+  File "/home/teacherdev/virtualenv/public__html_tb__development/2.7/lib/python2.7/site-packages/tweepy/api.py", line 338, in me
+    return self.get_user(screen_name=self.auth.get_username())
+  File "/home/teacherdev/virtualenv/public__html_tb__development/2.7/lib/python2.7/site-packages/tweepy/auth.py", line 134, in get_username
+    user = api.verify_credentials()
+  File "/home/teacherdev/virtualenv/public__html_tb__development/2.7/lib/python2.7/site-packages/tweepy/api.py", line 631, in verify_credentials
+    )(**kargs)
+  File "/home/teacherdev/virtualenv/public__html_tb__development/2.7/lib/python2.7/site-packages/tweepy/binder.py", line 245, in _call
+    return method.execute()
+  File "/home/teacherdev/virtualenv/public__html_tb__development/2.7/lib/python2.7/site-packages/tweepy/binder.py", line 227, in execute
+    raise RateLimitError(error_msg, resp)
+RateLimitError: [{u'message': u'Rate limit exceeded', u'code': 88}]
+[{u'message': u'Rate limit exceeded', u'code': 88}]

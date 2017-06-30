@@ -1,0 +1,33 @@
+<small>13:13:43</small> 
+<b> Query: </b>Where are you?
+<b> Response: </b>Match failed.
+
+<small>13:27:06</small> 
+<b> Query: </b>What color is a green salmon?
+<b> Response: </b>Green.
+
+<small>16/11/30 13:35:06</small> 
+<b> Query: </b>What colour is a yellow salmon?
+<b> Response: </b>Ok, I will remember What colour is a yellow salmon.
+
+<small>16/12/02 10:56:25</small> 
+<b> Query: </b>How are you
+<b> Response: </b>Always cheered up when I see you.
+
+<small>16/12/02 11:04:43</small> 
+<b> Query: </b>Awww I love you
+<b> Response: </b>It warms my heart to hear those words.
+
+<small>16/12/02 11:07:44</small> 
+<b> Query: </b>What is blue
+<b> Response: </b>I think What is a lot of things.
+
+<small>16/12/02 11:46:05</small> 
+<b> Query: </b>Just testing
+<b> Response: </b>Match failed.
+
+<small>16/12/05 13:01:53</small> 
+<b> Query: </b>loading "1409612214230" "alicebotty" into memory gotbot is not compiled yet
+<b> Response: </b>loading "1409612214230" "testbot0930231" into memory got
+bot is not compiled yet
+
