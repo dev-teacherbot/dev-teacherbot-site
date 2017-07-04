@@ -6,8 +6,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from chatbot.models import  pandora_settings, cbot, aiml_config, aiml_file
-from chatbot.forms import chatbot_form, PandoraUploadForm, addFileForm
+from chatbot.forms import chatbot_form, twitterbot_form, PandoraUploadForm, addFileForm
 import chatbot.script.pandora_actions as pa
+# -*- coding: utf-8 -*-
 from chatbot.script.process_manager import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -24,6 +25,7 @@ def bot_hub(request):
     """ Display the bots owned by the viewing user """
     context = RequestContext(request)
     context['chatbots'] = cbot.objects.user(request)
+    #context['twitterbots'] = cbot.twitterBots.get_twitter_enabled(request)
     return render_to_response('bot_hub.html', context)
 
 @login_required
@@ -40,6 +42,30 @@ def add(request):
     else:
         form = chatbot_form()
     return render(request, 'cbotforms/add_chatbot.html', {'form': form})
+
+@login_required
+def chatbot_to_twitterbot(request):
+    """ Display chatbots to transform into twitterbot """
+    context = RequestContext(request)
+    context['chatbots'] = cbot.objects.user(request)
+    return render_to_response('chatbot_to_twitterbot.html', context)
+    
+    
+@login_required
+def add_twitterbot(request, cbot_id):
+    """ Transform chatbot into twitterbot """
+    chatbot = get_object_or_404(cbot, id=cbot_id)
+    if request.method == 'POST':
+        form = twitterbot_form(request.POST, instance=chatbot)
+        if form.is_valid():
+            cbot = form.save(commit=False)
+            cbot.author = request.user
+            cbot.save()
+            form.save_m2m()
+            return HttpResponseRedirect('../')
+    else:
+        form = twitterbot_form(instance=chatbot)
+    return render(request, 'cbotforms/edit_chatbot.html', {'form': form, 'chatbot_id' : cbot_id })
 
 @login_required
 def edit(request, cbot_id):
@@ -74,7 +100,7 @@ def chatbot_add_setup(request, cbot_id, setup_id):
     chatbot = cbot.objects.get(id=cbot_id)
     setup = aiml_config.objects.get(id=setup_id)
     chatbot.aiml_config.add(setup)
-    return HttpResponseRedirect('/chatbot/' + cbot_id) # A bit hacky. Should probably be using reverse URL lookups.
+    return HttpResponseRedirect(reverse('cbot_manage', args=[cbot_id]))  
 
 @login_required
 def chatbot_remove_setup(request, cbot_id, setup_id):
@@ -82,12 +108,9 @@ def chatbot_remove_setup(request, cbot_id, setup_id):
     chatbot = cbot.objects.get(id=cbot_id)
     setup = aiml_config.objects.get(id=setup_id)
     chatbot.aiml_config.remove(setup)
-    return HttpResponseRedirect('/chatbot/' + cbot_id) # A bit hacky. Should probably be using reverse URL lookups.
+    return HttpResponseRedirect(reverse('cbot_manage', args=[cbot_id]))
 
-@login_required
-def starter_bot(request):
-    """ Creates a simple chat bot for users to learn basics"""
-    #Need to add functionality (maybe create simple bot skeleton)
+
 
 ################################################################
 ###################### Pandora Actions #########################

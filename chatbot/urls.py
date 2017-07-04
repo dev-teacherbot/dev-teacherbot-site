@@ -12,6 +12,8 @@ urlpatterns = [
 	#Chatbot Forms
 	url(r'^add/', views.add, name='add_chatbot'),
 	url(r'^(?P<cbot_id>[0-9]+)/edit/$', views.edit, name='edit_chatbot'),
+    url(r'^choose_bot/$', views.chatbot_to_twitterbot, name='chatbot_to_twitterbot'),
+    url(r'^add_twitterbot/', views.add_twitterbot, name='add_twitterbot'),
 	
 	# Static pages
 	url(r'^twitter-guide/$', views.twitter_guide, name='twitter_guide'),

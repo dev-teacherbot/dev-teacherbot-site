@@ -1,4 +1,4 @@
-16:42:05
+16:28:39
 Traceback (most recent call last):
   File "/home/teacherdev/public_html/tb_development/chatbot/script/twitter_bot.py", line 155, in <module>
     tweet_dict, auth, twitter_api, me, my_id, my_screen_name, tweet_log = setup()

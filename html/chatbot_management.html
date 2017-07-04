@@ -316,9 +316,15 @@
 					{% if chatbot.aiml_config %}
 						
 		                {% for aiml in chatbot.aiml_config.all %} 
-		                <{{ aiml.is_public|yesno:"p,a" }} class="{{ aiml.is_public|yesno:"normal-cursor," }} btn btn-info file-block" href="/admin/chatbot/aiml_config/{{ aiml.id }}">
-		                    <small class="list-title">{{ aiml.title }}</small> <br/>
-		                </{{ aiml.is_public|yesno:"p,a" }}>
+                    
+                            {% if aiml.id %}
+		                      <{{ aiml.is_public|yesno:"p,a" }} class="{{ aiml.is_public|yesno:"normal-cursor," }} btn btn-info file-block" href="/admin/chatbot/aiml_config/{{ aiml.id }}">
+		                      <small class="list-title">{{ aiml.title }}</small> <br/>
+		                      </{{ aiml.is_public|yesno:"p,a" }}>
+                            {% else %}
+                              <{{ aiml.is_public|yesno:"p,a" }} class="{{ aiml.is_public|yesno:"normal-cursor," }} btn btn-info file-block" href="/chatbot/aiml_wizard/">
+		                      </{{ aiml.is_public|yesno:"p,a" }}>
+                            {% endif %}
 		                {% endfor %}
 		        	{% else %}
 		            <div class="bg-success not-found">
@@ -430,8 +436,6 @@
 			
 
 			<div>
-
-				
 
 				<p><button class="btn btn-primary btn-action btn-load-chatbot" onclick="upload_bot_config({{chatbot.id}})">Load these files to your chatbot</button>
 				</p>

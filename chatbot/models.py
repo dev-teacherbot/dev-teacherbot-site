@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib import admin
@@ -66,7 +67,7 @@ class aiml_config(models.Model):
 
     @property
     def file_counts(self):
-        """ Returns a count osf all active attached files"""
+        """ Returns a count of all active attached files"""
         return self.aiml_files.count()
 
     def get_files(self):
@@ -101,8 +102,11 @@ class cbot(models.Model):
     twit_token_secret = models.CharField(max_length=200, blank=False, default='',  verbose_name="Twitter Access Token Secret")
     twit_c_key = models.CharField(max_length=200, blank=False, default='',  verbose_name="Twitter Consumer Key")
     twit_c_secret = models.CharField(max_length=200, blank=False, default='',  verbose_name="Twitter Consumer Secret")
+    
 
-    objects = cbotManager() # Custom Manager
+    objects = cbotManager() # Custom Manager returning bot objects
+    
+    #twitterBots = tbotManager() # Manager returning all twitter-enabled bots
     
     def get_attached_configurations(self):
         """ Get config objects """
@@ -118,8 +122,6 @@ class cbot(models.Model):
     class Meta:
         verbose_name = 'Chatbot Instance'
         verbose_name_plural = 'Chatbots'
-
-
 
 def validate_only_one_instance(obj):
     """ Raise validation error if more than one is created """
