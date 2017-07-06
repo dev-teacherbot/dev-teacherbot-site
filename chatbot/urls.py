@@ -28,7 +28,7 @@ urlpatterns = [
 	url(r'^(?P<file_id>[0-9]+)/file-delete/$', views.file_delete, name='file_delete'),
 	url(r'^file-manager/file-delete-all/$', views.file_delete_all, name='file_delete'),
 
-	# File Pages
+	# File Pages - Not currently needed as file handling done through admin pages
 	url(r'^add-file/$', views.file_add_new, name='file_add_new'),
 
 	# Twitter Actions

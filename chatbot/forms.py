@@ -7,6 +7,7 @@ from script.pandora_actions import create_bot
 
 
 
+
 class chatbot_form(ModelForm):
 	class Meta:
 		model = cbot
@@ -48,9 +49,10 @@ class twitterbot_form(ModelForm):
 class PandoraUploadForm(Form):
 	upload_archive = FileField(label='Pandora Configuration',required=False, help_text="Upload an archive file in ZIP or RAR format")
 
-class addFileForm(ModelForm):
-	filename = CharField(max_length=100)
 
+class addFileForm(ModelForm):
+    	filename = CharField(max_length=100)
+    	
 	class Meta:
 		model = aiml_file
 		fields = ['filename', 'docfile']
@@ -65,5 +67,4 @@ class addFileForm(ModelForm):
 		fileFormDataLog.write(data)
 		fileFormDataLog.close()
 		return data
-
 

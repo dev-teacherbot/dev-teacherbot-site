@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from chatbot.models import  pandora_settings, cbot, aiml_config, aiml_file
-from chatbot.forms import chatbot_form, twitterbot_form, PandoraUploadForm, addFileForm
+from chatbot.forms import chatbot_form, twitterbot_form 
 import chatbot.script.pandora_actions as pa
 # -*- coding: utf-8 -*-
 from chatbot.script.process_manager import *
@@ -285,7 +285,7 @@ def file_delete_all(request):
         return HttpResponse("We were unable to delete the files due to an error: " + str(e))
 
 
-
+# Not Currently Needed as file management done through admin pages
 @login_required
 def file_add_new(request):
     """ Adds a new file via text entry """
@@ -307,13 +307,6 @@ def aiml_wizard(request):
     context = RequestContext(request)
     context['aiml_configs'] = aiml_config.objects.user(request)
     return render_to_response('aimlwizard/aiml_wizard_home.html', context)
-
-def add_aiml_setup(request):
-    pass
-
-def remove_aiml_setup(request):
-    pass
-
 
 
 ################################################################

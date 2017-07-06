@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import cbot, aiml_config, pandora_settings , aiml_file
-from .models import aiml_file
 from django import forms
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -8,6 +7,7 @@ from multiupload.fields import MultiFileField
 from django.db import models
 from teacherbot.settings import MEDIA_ROOT
 import os
+import zipfile
 
 class cbot_admin(admin.ModelAdmin):
 	exclude = ('author',)
@@ -20,7 +20,7 @@ class cbot_admin(admin.ModelAdmin):
 class ConfigFileForm(forms.ModelForm):
 	fields = ['attachments']
 	model = aiml_config
-	attachments = MultiFileField( max_file_size=1024*1024*20, help_text="Upload files or drag and drop here. Max number of files in one upload is 65.") ## Create an additional field for multi-files
+	attachments = MultiFileField( max_file_size=1024*1024*20, content_types=('.zip', '.aiml', '.set', '.map', '.substitution', '.pdefaults', '.properties'), help_text="Upload files or drag and drop here. Max number of files in one upload is 65.") ## Create an additional field for multi-files
 
 	# Config_instance added to allow easier use in ModelAdmin; may be bad practice.
 	def __init__(self, *args, **kwargs):
@@ -77,14 +77,28 @@ class config_admin(admin.ModelAdmin):
 			setup = aiml_config.objects.create(title=request.POST['title'])
 		else:
 			setup = aiml_config.objects.get(id=form.instance.pk)
-		for each in attachments:
-			afile = aiml_file.objects.create(docfile=each,text_file=each.read(), author=request.user)
-			afile.save()				 # [Code Cleanup Needed]
-			setup.aiml_files.add(afile)
+		for single_file in attachments:
+			process_archive_and_save(single_file, setup)
 		setup.save()
-
-
-
+    
+    	
+    	def process_archive_and_save(self, file_to_process, setup):
+        	""" Process any archive files, currently only ZIP files accepted, and save all as aiml files """
+        	filename, file_extension = os.path.splitext(str(file_to_process))
+        	if(file_extension == '.zip'):
+            		archived_file = zipfile.ZipFile(file_to_process)
+            		file_name_list = archived_file.namelist()
+            		for file_name in file_name_list:
+               			file_object = archived_file.open(file_name)
+                		afile = aiml_file.objects.create(docfile=file_object,text_file=file_object.read(), author=request.user)
+                		afile.save()				 
+                		setup.aiml_files.add(afile)         
+        	else:
+            		afile = aiml_file.objects.create(docfile=file_to_process,text_file=file_to_process.read(), author=request.user)
+            		afile.save()				 
+            		setup.aiml_files.add(afile)
+    	        
+    	
 	# Limit the queryset of the aiml_files available to only the user's
 	def formfield_for_manytomany(self, db_field, request, **kwargs):
 		if db_field.name == "aiml_files":

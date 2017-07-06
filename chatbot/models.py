@@ -10,6 +10,7 @@ import random, string
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 
+
 ## This may not be ideal for longterm
 def get_upload_directory(self, filename):
         """ Return a randomized folder name as an upload location """
