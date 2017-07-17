@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.core.files.base import ContentFile
 import os
 from teacherbot.settings import MEDIA_ROOT
-from .managers import cbotManager, fileManager, configManager
+from .managers import botManager, cbotManager, tbotManager, fileManager, configManager
 import random, string
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
@@ -21,7 +21,7 @@ class aiml_file(models.Model):
     docfile = models.FileField(upload_to=get_upload_directory)
     text_file = models.TextField(default='', blank=True, verbose_name="File Contents")
     author = models.ForeignKey(User, default=1, related_name='aiml', blank=True)
-    objects = fileManager()
+    file_manager = fileManager()
 
     def get_path(self):
         """ Return full system path """
@@ -41,7 +41,7 @@ class aiml_file(models.Model):
     @property
     def get_simplename(self):
         """ The pathless version of the filename """
-        return self.docfile.name.split('/')[-1] 
+        return os.path.basename(self.docfile.name) 
     
     class Meta:
         verbose_name = 'File'
@@ -61,7 +61,7 @@ class aiml_config(models.Model):
     is_public = models.BooleanField('Should be public?', default=False)
 
     author = models.ForeignKey(User, default=1, related_name='configs', blank=True)
-    objects = configManager()
+    config_manager = configManager()
 
     def __str__(self):              # __unicode__ on Python 2
         return self.title
@@ -103,16 +103,19 @@ class cbot(models.Model):
     twit_token_secret = models.CharField(max_length=200, blank=False, default='',  verbose_name="Twitter Access Token Secret")
     twit_c_key = models.CharField(max_length=200, blank=False, default='',  verbose_name="Twitter Consumer Key")
     twit_c_secret = models.CharField(max_length=200, blank=False, default='',  verbose_name="Twitter Consumer Secret")
+    twit_capable = models.BooleanField('Is twitter capable?', default=False)
     
 
-    objects = cbotManager() # Custom Manager returning bot objects
+    bot_manager = botManager() # Manager returning all bot objects owned by the user
     
-    #twitterBots = tbotManager() # Manager returning all twitter-enabled bots
+    chatbot_manager = cbotManager() # Manager returning chatbot objects owned
+    
+    twitterbot_manager = tbotManager() # Manager returning all twitter-capable bots owned
     
     def get_attached_configurations(self):
         """ Get config objects """
         return self.aiml_config.all()
-
+        
     def get_attached_config_names(self, join=True):
         """ Get config object title """
         return self.aiml_config.all().values_list('title', flat=True)

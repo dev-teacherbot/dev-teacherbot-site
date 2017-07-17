@@ -1,0 +1,49 @@
+Time: 2017-07-14 11:06:00.814661  Folder name: wet.set
+Time: 2017-07-14 11:06:00.814838  Temp directory: /home/teacherdev/public_html/tb_development/teacherbot/files/tmp8k3JaR
+Time: 2017-07-14 11:06:00.814977  Full Path: /home/teacherdev/public_html/tb_development/teacherbot/files/tmp8k3JaR
+Time: 2017-07-14 11:06:33.122185  Folder name: wet.set
+Time: 2017-07-14 11:06:33.122286  Temp directory: /home/teacherdev/public_html/tb_development/teacherbot/files/tmpbtIBwS
+Time: 2017-07-14 11:06:33.122378  Full Path: /home/teacherdev/public_html/tb_development/teacherbot/files/tmpbtIBwS
+Time: 2017-07-14 15:32:31.644729  /home/teacherdev/public_html/tb_development/teacherbot/files/tmp6K77aU/test1
+Time: 2017-07-14 15:35:59.226045  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpfHB1xB/test1
+Time: 2017-07-14 15:44:54.626321  /home/teacherdev/public_html/tb_development/teacherbot/files/tmp3Z1OE3/wet.set
+Time: 2017-07-14 15:44:54.626431  /home/teacherdev/public_html/tb_development/teacherbot/files/tmp3Z1OE3/test arc.zip
+Time: 2017-07-14 15:44:54.626525  /home/teacherdev/public_html/tb_development/teacherbot/files/tmp3Z1OE3/was.set
+Time: 2017-07-14 15:44:54.626629  /home/teacherdev/public_html/tb_development/teacherbot/files/tmp3Z1OE3/wh.set
+Time: 2017-07-14 15:44:54.626721  /home/teacherdev/public_html/tb_development/teacherbot/files/tmp3Z1OE3/weekday.set
+Time: 2017-07-14 15:46:27.949767  /home/teacherdev/public_html/tb_development/teacherbot/files/tmplxcd7v/wet.set
+Time: 2017-07-14 15:46:27.950057  /home/teacherdev/public_html/tb_development/teacherbot/files/tmplxcd7v/test arc.zip
+Time: 2017-07-14 15:46:27.950444  /home/teacherdev/public_html/tb_development/teacherbot/files/tmplxcd7v/was.set
+Time: 2017-07-14 15:46:27.950827  /home/teacherdev/public_html/tb_development/teacherbot/files/tmplxcd7v/wh.set
+Time: 2017-07-14 15:46:27.951065  /home/teacherdev/public_html/tb_development/teacherbot/files/tmplxcd7v/weekday.set
+Time: 2017-07-14 15:47:13.643237  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpl7fC7W/wet.set
+Time: 2017-07-14 15:47:13.643349  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpl7fC7W/test arc.zip
+Time: 2017-07-14 15:47:13.643442  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpl7fC7W/was.set
+Time: 2017-07-14 15:47:13.643550  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpl7fC7W/wh.set
+Time: 2017-07-14 15:47:13.643646  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpl7fC7W/weekday.set
+Time: 2017-07-14 15:55:06.115642  test1
+Time: 2017-07-14 15:55:53.946404  test arc
+Time: 2017-07-14 15:56:53.245325  maps
+Time: 2017-07-14 15:57:34.545614  test1
+Time: 2017-07-14 15:59:08.816136  test1
+Time: 2017-07-14 15:59:39.339551  test1
+Time: 2017-07-14 16:04:51.947282  wow1
+Time: 2017-07-14 16:06:36.210581  test0
+Time: 2017-07-14 16:06:36.210787  True
+Time: 2017-07-14 16:09:24.637962  wow1
+Time: 2017-07-14 16:09:24.638149  True
+Time: 2017-07-14 16:10:06.514928  test0
+Time: 2017-07-14 16:10:06.515034  True
+Time: 2017-07-14 16:10:49.847306  test0
+Time: 2017-07-14 16:10:49.847514  True
+Time: 2017-07-14 16:12:50.437133  wow1
+Time: 2017-07-14 16:12:50.437353  True
+Time: 2017-07-14 16:12:50.437722  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/denormal.substitution
+Time: 2017-07-14 16:12:50.438044  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/normal.substitution
+Time: 2017-07-14 16:12:50.438298  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/hi.set
+Time: 2017-07-14 16:12:50.438543  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/pand_initial.aiml
+Time: 2017-07-14 16:12:50.438873  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/wow1.properties
+Time: 2017-07-14 16:12:50.439130  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/person.substitution
+Time: 2017-07-14 16:12:50.439376  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/person2.substitution
+Time: 2017-07-14 16:12:50.439656  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/gender.substitution
+Time: 2017-07-14 16:12:50.439960  /home/teacherdev/public_html/tb_development/teacherbot/files/tmpaYj0c_/wow1/pand_learn.aiml

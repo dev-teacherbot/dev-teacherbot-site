@@ -6,8 +6,11 @@ from django.http import HttpResponseRedirect
 from multiupload.fields import MultiFileField
 from django.db import models
 from teacherbot.settings import MEDIA_ROOT
+from script import upload_processing
 import os
 import zipfile
+import tempfile
+import shutil
 
 class cbot_admin(admin.ModelAdmin):
 	exclude = ('author',)
@@ -67,6 +70,7 @@ class config_admin(admin.ModelAdmin):
 			obj.author = request.user
 		obj.save()
 
+
 	# Save related - Create the config if not existing, and then add uploaded files to config
 	def save_related(self, request, form, formsets, change):
 		""" Save form data as aiml_file, then attach to aiml_config instance """
@@ -74,35 +78,21 @@ class config_admin(admin.ModelAdmin):
 		attachments = form.cleaned_data.get('attachments', None)  ## Taken from "ConfigFileForm"
 		afile = []
 		if not hasattr(form.instance, 'pk'):
-			setup = aiml_config.objects.create(title=request.POST['title'])
+			setup = aiml_config.config_manager.create(title=request.POST['title'])
 		else:
-			setup = aiml_config.objects.get(id=form.instance.pk)
-		for single_file in attachments:
-			process_archive_and_save(single_file, setup)
-		setup.save()
-    
-    	
-    	def process_archive_and_save(self, file_to_process, setup):
-        	""" Process any archive files, currently only ZIP files accepted, and save all as aiml files """
-        	filename, file_extension = os.path.splitext(str(file_to_process))
-        	if(file_extension == '.zip'):
-            		archived_file = zipfile.ZipFile(file_to_process)
-            		file_name_list = archived_file.namelist()
-            		for file_name in file_name_list:
-               			file_object = archived_file.open(file_name)
-                		afile = aiml_file.objects.create(docfile=file_object,text_file=file_object.read(), author=request.user)
-                		afile.save()				 
-                		setup.aiml_files.add(afile)         
-        	else:
-            		afile = aiml_file.objects.create(docfile=file_to_process,text_file=file_to_process.read(), author=request.user)
-            		afile.save()				 
-            		setup.aiml_files.add(afile)
-    	        
+			setup = aiml_config.config_manager.get(id=form.instance.pk)
+		# Using function from scripts: process all attachments
+        	if attachments is not None:
+                	tempfile.tempdir = "/home/teacherdev/public_html/tb_development/teacherbot/files"
+                    	temp_location = tempfile.mkdtemp()
+			processed_files = upload_processing.Process_Files(attachments, temp_location) 
+            		upload_processing.Save_Aiml(processed_files, setup, request)
+
     	
 	# Limit the queryset of the aiml_files available to only the user's
 	def formfield_for_manytomany(self, db_field, request, **kwargs):
 		if db_field.name == "aiml_files":
-			 kwargs["queryset"] = aiml_file.objects.filter(author=request.user)
+			 kwargs["queryset"] = aiml_file.file_manager.filter(author=request.user)
 		return super(config_admin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 

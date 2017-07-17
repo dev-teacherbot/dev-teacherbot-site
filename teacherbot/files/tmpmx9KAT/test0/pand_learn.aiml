@@ -1,0 +1,26 @@
+<aiml version="2.0">
+
+<category><pattern>WHAT COLOUR IS THE SKY</pattern><template>Blue-ish</template></category>
+
+<category><pattern>ARE YOU SAD</pattern><template>I'm programmed to remain happy at all times.</template></category>
+
+<category><pattern>HOW DO YOU FEEL</pattern><template>I'm feeling great.</template></category>
+
+<category><pattern>WHAT IS YOUR NAME</pattern><template>My name is test0</template></category>
+
+<category><pattern>^ WHAT IS ^ MEANING OF LIFE ^</pattern><template>The meaning of life is greatly disputed, but leading research suggests it is 42.</template></category>
+
+<category><pattern>I NEED ^ <set>help</set></pattern> <template>Don't worry test0 is here to save the day!</template></category>
+
+<category><pattern>HI</pattern><template><random><li>Hey how are you?</li><li>Hey there! How has your day been?</li><li>Hullo my friend.</li></random></template></category>
+    
+   
+       
+
+
+
+        
+<category><pattern>WHAT COLOUR ARE TEETH</pattern><template>White</template></category>
+
+
+</aiml>

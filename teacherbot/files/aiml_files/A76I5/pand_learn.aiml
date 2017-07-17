@@ -1,0 +1,6 @@
+<aiml version="2.0">
+
+<category><pattern><set>hi</set></pattern><template>How are you?!</template></category>
+
+
+</aiml>

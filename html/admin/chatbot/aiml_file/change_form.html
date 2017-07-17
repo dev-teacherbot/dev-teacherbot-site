@@ -2,10 +2,6 @@
 {% load i18n admin_urls admin_static admin_modify %}
 
 
-
-
-
-
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
 {{ media }}
@@ -34,13 +30,23 @@
 
 <ul class="tab">
             <li class="navbar-brand">Chatbot Response Templates: </li>
-          <li><a href="javascript:void(0)" id="tab-console" class="tablinks" onclick="openTab(event, 'simple-response-area')"><i class="fa fa-comment" aria-hidden="true"></i>Simple Reply</a></li>
+            <li><a href="javascript:void(0)" id="tab-console" class="tablinks" onclick="openTab(event, 'simple-response-area')"><i class="fa fa-comment" aria-hidden="true"></i> Simple Reply</a></li>
+            <li><a href="javascript:void(0)" id="tab-console" class="tablinks" onclick="openTab(event, 'advanced-response-area')"><i class="fa fa-comment" aria-hidden="true"></i> Advanced Reply</a></li>
 </ul>
 
 <div id="simple-response-area" class="tabcontent">
 <label>Text to respond to: </label><input id="simple-prompt" name="simple-prompt"> </input>
 <label>Text to reply: </label><input id="simple-response" name="simple-response"> </input>
-<button onclick="simple_response()">Add</button>
+<button onclick="simple_response()">Add Response</button>
+</div>
+
+<div id="advanced-response-area" class="tabcontent">
+<label>Text to respond to: </label><input id="advanced-prompt" name="advanced-prompt"> </input>
+<button id="set" onclick="add_to_prompt(this.id)">Add Set</button>
+<button id="wild1" onclick="add_to_prompt(this.id)" title="* Wild">1+ words</button>
+<button id="wild0" onclick="add_to_prompt(this.id)" title="^ Wild">0+ words</button>
+<label>Text to reply: </label><input id="advanced-response" name="advanced-response"> </input>
+<button onclick="advanced_response()">Add Response</button>
 </div>
 
 

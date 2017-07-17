@@ -128,7 +128,7 @@ document.getElementById("tab-filelist").click();
 			                    	<div id="file-{{ file.id }}" class="file-block">
 			                    	<p class="list-title">{{ file.get_simplename }}</p>
 					                    <button class="btn btn-primary list-delete-button" onclick="delete_file({{ file.id }})">Delete </button>
-					                    <a href="/admin/chatbot/aiml_file/{{ aiml.id }}/" class="btn btn-primary">Edit</a>
+					                    <a href="/admin/chatbot/aiml_file/{{ file.id }}/" class="btn btn-primary">Edit</a>
 			                    	</div>
 			                	{% endfor %}
 			                {% endfor %}

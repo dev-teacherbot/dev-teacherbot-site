@@ -1,14 +1,19 @@
 from django.db import models
 
+class botManager(models.Manager):
+    def user(self, request):
+        """ Returns only results owned by the current user, or all if super admin """
+        return super(botManager, self).get_queryset().filter(author=request.user)
+
 class cbotManager(models.Manager):
 	def user(self, request):
 		""" Returns only results owned by the current user, or all if super admin """
-		return super(cbotManager, self).get_queryset().filter(author=request.user)
+		return super(cbotManager, self).get_queryset().filter(author=request.user).filter(twit_capable = False)
     
-#class tbotManager(models.Manager):
-    #def get_twitter_enabled(self,request):
-       # """ Returns only bots that have been twitter enabled """
-       # return super(tbotManager, self).get_queryset().filter(twit_c_key != '')
+class tbotManager(models.Manager):
+    def get_twitter_capable(self,request):
+        """ Returns only bots that have been twitter enabled """
+        return super(tbotManager, self).get_queryset().filter(author=request.user).filter(twit_capable = True)
 
 class configManager(models.Manager):
 	def user(self, request):

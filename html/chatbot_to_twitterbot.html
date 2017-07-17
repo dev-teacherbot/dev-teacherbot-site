@@ -74,11 +74,11 @@ Chatbot to Twitterbot | {{ site_title|default:_('Chatbot Administration') }}
             <ul class="twitbot-index container-fluid  index-listing">
                 {% for chatbot in chatbots %} 
                 <div class="col-sm-6 col-lg-3">
-                <div class="twitbot-item-wrap item-wrap">
+                <div class="twitbot-item-wrap item-wrap" onclick="location.href='/chatbot/{{ chatbot.id }}/add_twitterbot/';" style="cursor: pointer;">
                     <h4>
                         {{ chatbot.title }}
                     </h4>  
-                                        
+                                                            
                 </div>
                 </div>
                 {% endfor %}

@@ -78,10 +78,9 @@ Your Chatbots & Twitterbots | {{ site_title|default:_('Chatbot Administration') 
             <ul class="twitbot-index container-fluid  index-listing">
                 {% for chatbot in chatbots %} 
                 <div class="col-sm-6 col-lg-3">
-                <div class="twitbot-item-wrap item-wrap">
+                <div class="twitbot-item-wrap item-wrap wrap-purple">
                     <h4 class="index-item-header">
-                        <a href="/chatbot/{{ chatbot.id }}" title="Go to the chatbot control panel">
-                            <i title="{{ chatbot.enabled|yesno:"Chatbot Active, Chatbot Offline" }}" id="enabled-icon" class="fa fa-user {{ chatbot.enabled|yesno:"icon-active," }}" aria-hidden="true"></i>
+                        <a class="title-button" href="/chatbot/{{ chatbot.id }}" title="Go to the chatbot control panel">
                             {{ chatbot.title }}
                         </a>
                         <a class="edit-button-small" href="/chatbot/{{ chatbot.id }}/edit/" title="Edit this chatbot's settings"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
@@ -105,6 +104,10 @@ Your Chatbots & Twitterbots | {{ site_title|default:_('Chatbot Administration') 
                 </div>
                 {% endfor %}
             </ul>
+        {% elif twitterbots %}
+            <div class="bg-success not-found">
+                <strong>Click on the add button below to create a new chatbot.</strong>
+            </div>    
         {% else %}
             <div class="bg-success not-found">
                 <strong>You don't currently have any Chatbots configured! Go to the <a class="text-warning" href="/chatbot/get-started/">get started</a> section, or click on the add button below.</strong>
@@ -125,25 +128,23 @@ Your Chatbots & Twitterbots | {{ site_title|default:_('Chatbot Administration') 
     <div class="col-lg-12 index-wrapper">
     <div class="border-segment segment-blue">
         <h3 class="index-heading">Twitterbots</h3>
-        <!--
         <div class="border-segment-wrap">
         {% if twitterbots %}
             <ul class="twitbot-index container-fluid  index-listing">
                 {% for twitterbot in twitterbots %} 
                 <div class="col-sm-6 col-lg-3">
-                <div class="twitbot-item-wrap item-wrap">
+                <div class="twitbot-item-wrap item-wrap wrap-blue">
                     <h4 class="index-item-header">
-                        <a href="/chatbot/{{ chatbot.id }}" title="Go to the chatbot control panel">
-                            <i title="{{ chatbot.enabled|yesno:"Chatbot Active, Chatbot Offline" }}" id="enabled-icon" class="fa fa-user {{ chatbot.enabled|yesno:"icon-active," }}" aria-hidden="true"></i>
+                        <a href="/chatbot/{{ twitterbot.id }}" title="Go to the twitterbot control panel">
+                            <i title="{{ twitterbot.enabled|yesno:"Chatbot Active, Chatbot Offline" }}" id="enabled-icon" class="fa fa-user {{ twitterbot.enabled|yesno:"icon-active," }}" aria-hidden="true"></i>
                             {{ twitterbot.title }}
                         </a>
-                        <a class="edit-button-small" href="/chatbot/{{ chatbot.id }}/edit/" title="Edit this chatbot's settings"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="edit-button-small" href="/chatbot/{{ chatbot.id }}/" title="Go to the chatbot's control panel"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a class="edit-button-small" href="/chatbot/{{ twitterbot.id }}/edit/" title="Edit this twitterbot's settings"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="edit-button-small" href="/chatbot/{{ twitterbot.id }}/" title="Go to the twitterbot's control panel"><i class="fa fa-eye" aria-hidden="true"></i></a>
                     </h4>
                     <div class="twitbot-item-contents">
                         <!-- Load in attached configurations, but don't provide a clickable link or the same display if they are not edittable -->
-        <!--
-                        {% if twitterbot.aiml_config %}
+                        {% if twitterbot.aiml_config.all %}
                             {% for aiml in twitterbot.aiml_config.all %}
 
                                 <{{ aiml.is_public|yesno:"p,a" }} title="{{ aiml.is_public|yesno:"This is a public setup you cannot edit, Edit this Setup" }} "
@@ -164,7 +165,7 @@ Your Chatbots & Twitterbots | {{ site_title|default:_('Chatbot Administration') 
                 <strong>You don't currently have any twitterbots configured! If you've built a chatbot, click on the button below to add twitter functionality!</strong>
             </div>
         {% endif %}
-        -->
+   
 
         <a class="btn-primary btn add-chatbot-btn" href="/chatbot/choose_bot/">Evolve chatbot into twitterbot <i class="fa fa-user-plus" aria-hidden="true"></i></a>
         </div>

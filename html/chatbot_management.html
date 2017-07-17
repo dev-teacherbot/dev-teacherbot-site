@@ -5,9 +5,6 @@
 {% endblock %}
 
 
-<h1> Chatbot {{ chatbot.chatbot_name }} </h1>
-
-
 {% block content %}
 
 <div class="container-fluid chatbot-management">
@@ -58,8 +55,8 @@
 		////////////////////////////////////////////////////////////////////
 		// Twitter Actions
 
-		function twit_check(chatbot_id) {
-			$.get('/chatbot/'+chatbot_id+'/twit-check/', function (data) {
+		function twit_check(bot_id) {
+			$.get('/chatbot/'+bot_id+'/twit-check/', function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			});
 		 }
@@ -78,69 +75,70 @@
 			
 		 }
 
-		 function toggle_bot(chatbot_id) {
-			$.get('/chatbot/'+chatbot_id+'/bot-enabled/', function (data) {
+		 function toggle_bot(bot_id) {
+			$.get('/chatbot/'+bot_id+'/bot-enabled/', function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			toggle_bot_ui();
 			});
 		 }
-
-		 function chatlog_load(chatbot_id) {
-			$.get('/chatbot/'+chatbot_id+'/get-chatlog/', function (data) {
+       
+		 function chatlog_load(bot_id) {
+			$.get('/chatbot/'+bot_id+'/get-chatlog/', function (data) {
 			$( ".chatbot-logging" ).html(data);
 			});
 		 }
 
 		////////////////////////////////////////////////////////////////////
 		/// The below are the calls to pandora_actions.py
-		function create_bot(chatbot_id) {
-			$.get('/chatbot/'+chatbot_id+'/pa-create/', function (data) {
+		function create_bot(bot_id) {
+			$.get('/chatbot/'+bot_id+'/pa-create/', function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			});
 		  }
 
-		function download_bot(chatbot_id) {
+		function download_bot(bot_id) {
 			$( ".pandora-logging" ).prepend(log_format("Contacting chatbot for files, please wait -"));
-			$.get('/chatbot/'+chatbot_id+'/pa-download/', function (data) {
+			$.get('/chatbot/'+bot_id+'/pa-download/', function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			});
 		  }
 
-		 function compile_bot(chatbot_id) {
+		 function compile_bot(bot_id) {
 		 	$( ".pandora-logging" ).prepend(log_format("Attempting to compile chatbot."));
-			$.get('/chatbot/'+chatbot_id+'/pa-compile/', function (data) {
+			$.get('/chatbot/'+bot_id+'/pa-compile/', function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			});
 		  }
 
-			
-		 
-
-		 function talkto_bot(chatbot_id, query) {
-			$.post('/chatbot/'+chatbot_id+'/pa-talk/', { askbot: query ,  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
+		 function talkto_bot(bot_id, query) {
+			$.post('/chatbot/'+bot_id+'/pa-talk/', { askbot: query ,  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			});
 		 }
 
-		 function upload_bot(chatbot_id) {
+		 function upload_bot(bot_id) {
 		 	$( ".pandora-logging" ).prepend(log_format("Your archive file is uploading; you will be returne to this page on completion."));
-			$.post('/chatbot/'+chatbot_id+'/pa-archive/', {  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
+			$.post('/chatbot/'+bot_id+'/pa-archive/', {  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 			});
 		 }
 
-		 function upload_bot_config(chatbot_id) {
+		 function upload_bot_config(bot_id) {
 		 	$( ".pandora-logging" ).prepend(log_format("Starting upload of files currently in setups: {{ chatbot.get_attached_config_names|join:' , ' }}. <br> This may take some time if you are uploading a large set of files."));
-			$.post('/chatbot/'+chatbot_id+'/pa-upload/', {  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
+			$.post('/chatbot/'+bot_id+'/pa-upload/', {  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
 			$( ".pandora-logging" ).prepend(log_format(data));
 				load_active_files();
 			});
 		 }
+        
+		 function upload_and_compile(bot_id) {
+             		upload_bot_config(bot_id);
+		 }
 
-		 function delete_pandora_files(chatbot_id) {
+		 function delete_pandora_files(bot_id) {
 		 	if (confirm('Are you sure you want to delete active files on the chatbot?')) {
 		 		$( ".pandora-logging" ).prepend(log_format("Starting deletion of current '{{ chatbot.pandora_name }}' files, please wait --"));
-			    $.post('/chatbot/'+chatbot_id+'/pa-delete-all/', {  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
+			    $.post('/chatbot/'+bot_id+'/pa-delete-all/', {  csrfmiddlewaretoken: "{{ csrf_token }}"}, function (data) {
 					$( ".pandora-logging" ).prepend(log_format(data));
 					load_active_files();
 					});
@@ -250,33 +248,19 @@
 
 	<section class="cbot-status col-area col-md-4">
 			<div class="c-man-actions border-segment">
-				<h4 class="bg-primary"><i title="{{ chatbot.enabled|yesno:"Chatbot Active, Chatbot Offline" }}" id="enabled-icon" class="fa fa-user {{ chatbot.enabled|yesno:"icon-active," }}" aria-hidden="true"></i> {{ chatbot.title }} </h4>
+				<h4 class="bg-primary"> {{ chatbot.title }} </h4>
 				<div class="border-segment-wrap">
 					<input type="text" id="talk-entry"/>
 					<p><button class="btn btn-primary" id="talk-button" onclick="talkto_bot({{ chatbot.id }} , $('#talk-entry').val())"> Talk </button></p>
-
-
-					
-
-					<p><button class="btn btn-primary btn-action chatbot-toggle-button" onclick="toggle_bot({{ chatbot.id }})">{{ chatbot.enabled|yesno:"Deactivate,Activate" }}</button> 
-						<div class="help-tip">
-							<p>Toggle whether your chatbot should be actively checking for tweets and hashtags on twitter.</p>
-						</div>
-					</p>
-
-				
-					<p>
+                    
+                    <p>
 					<a class="edit-link btn btn-action btn-primary" href="/chatbot/{{ chatbot.id }}/edit"> Edit Chatbot</a>
 						<div class="help-tip">
 							<p>You can edit your chatbot settings, and AIML setups assigned to it here.</p>
-					</div>
-					</p>
+					   </div>
+				    </p>
 
-					<p><button class="btn btn-primary btn-action" onclick="create_bot({{ chatbot.id }})"> Compile your chatbot</button> 
-						<div class="help-tip">
-							<p>If your chatbot is not behaving as expected or the file views below are not correctly loading, press this. The AIML files have to be processed before the chatbot can function</p>
-						</div>
-					</p>
+					
 				</div>
 			</div>
 
@@ -342,8 +326,6 @@
 		<ul class="tab">
 		  <li><a href="javascript:void(0)" id="tab-console" class="tablinks" onclick="openTab(event, 'console')"><i class="fa fa-comment" aria-hidden="true"></i>Log</a></li>
 		  <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'settings')"><i class="fa fa-info-circle" aria-hidden="true"></i> Settings</a></li>
-		  <li><a href="javascript:void(0)" class="tablinks" onclick="chatlog_load( {{chatbot.id }} );openTab(event, 'chatlog');"><i class="fa fa-info-circle" aria-hidden="true"></i> Chatlog</a></li>
-		  <!-- <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'manualupload')"><i class="fa fa-upload" aria-hidden="true"></i> Manual Upload</a></li> -->
 		</ul>
 		<!-- END TAB Menu -->
 
@@ -355,13 +337,6 @@
 		<div id="settings" class="tabcontent"> 
 			<!-- Begin Twitter/Pandora Settings display -->
 			<div class="pandora-details">
-
-				<p>
-					<button class="btn btn-primary btn-action btn-validate" onclick="twit_check({{chatbot.id}})">Check Twitter Details</button> &nbsp;&nbsp; 
-					<div class="help-tip">
-							<p>If the configuration is valid a message will appear in the log, if not you will have to revisit app.twitter.com and check your access token, secret, consumer keys, and consumer secret.</p>
-					</div>
-				</p>
 				<table class="table table-inverse">
 				  <tbody>
 				    <tr>
@@ -371,27 +346,7 @@
 				    <tr>
 				      <td>Pandora Name</td>
 				      <td>{{ chatbot.pandora_name }}</td>
-				    </tr>
-				    <tr>
-				      <td>Hashtags</td>
-				      <td>{{ chatbot.twit_hashtags }}</td>
-				    </tr>
-				    <tr>
-				      <td>Twitter Token</td>
-				      <td>{{ chatbot.twit_token }}</td>
-				    </tr>
-				    <tr>
-				      <td>Twitter Token Secret</td>
-				      <td>{{ chatbot.twit_token_secret }}</td>
-				    </tr>
-				    <tr>
-				      <td>Twitter Customer Key</td>
-				      <td>{{ chatbot.twit_c_key }}</td>
-				    </tr>
-				    <tr>
-				      <td>Twitter Customer Secret</td>
-				      <td>{{ chatbot.twit_c_secret }}</td>
-				    </tr>
+                      </tr>
 				  </tbody>
 
 				</table>
@@ -437,7 +392,7 @@
 
 			<div>
 
-				<p><button class="btn btn-primary btn-action btn-load-chatbot" onclick="upload_bot_config({{chatbot.id}})">Load these files to your chatbot</button>
+				<p><button class="btn btn-primary btn-action btn-load-chatbot" onclick="upload_and_compile({{chatbot.id}})">Load these files to your chatbot</button>
 				</p>
 
 				

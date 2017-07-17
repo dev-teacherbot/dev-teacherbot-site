@@ -24,8 +24,8 @@ import os.path
 def bot_hub(request):
     """ Display the bots owned by the viewing user """
     context = RequestContext(request)
-    context['chatbots'] = cbot.objects.user(request)
-    #context['twitterbots'] = cbot.twitterBots.get_twitter_enabled(request)
+    context['chatbots'] = cbot.chatbot_manager.user(request)
+    context['twitterbots'] = cbot.twitterbot_manager.get_twitter_capable(request)
     return render_to_response('bot_hub.html', context)
 
 @login_required
@@ -47,25 +47,28 @@ def add(request):
 def chatbot_to_twitterbot(request):
     """ Display chatbots to transform into twitterbot """
     context = RequestContext(request)
-    context['chatbots'] = cbot.objects.user(request)
+    context['chatbots'] = cbot.chatbot_manager.user(request)
     return render_to_response('chatbot_to_twitterbot.html', context)
     
     
 @login_required
 def add_twitterbot(request, cbot_id):
-    """ Transform chatbot into twitterbot """
+    """ Chatbot settings edit """
     chatbot = get_object_or_404(cbot, id=cbot_id)
-    if request.method == 'POST':
-        form = twitterbot_form(request.POST, instance=chatbot)
+    if request.method == "POST":
+        form = twitterbot_form(request.POST, instance=chatbot, initial={'twit_capable': True})
         if form.is_valid():
-            cbot = form.save(commit=False)
-            cbot.author = request.user
-            cbot.save()
+            form.author = request.user
+            chatbot = form.save(commit=False)
+            chatbot.save()
             form.save_m2m()
-            return HttpResponseRedirect('../')
+            return HttpResponseRedirect(reverse('bot_hub'))
+        else:
+            return HttpResponse("Sorry - there was an error the system could not handle.")
+            #messages.error(request, "Error")
     else:
-        form = twitterbot_form(instance=chatbot)
-    return render(request, 'cbotforms/edit_chatbot.html', {'form': form, 'chatbot_id' : cbot_id })
+        form = twitterbot_form(instance=chatbot, initial={'twit_capable': True})
+    return render(request, 'cbotforms/add_twitterbot.html', {'form': form, 'chatbot_id' : cbot_id })
 
 @login_required
 def edit(request, cbot_id):
@@ -78,7 +81,7 @@ def edit(request, cbot_id):
             chatbot = form.save(commit=False)
             chatbot.save()
             form.save_m2m()
-            return HttpResponseRedirect('../')
+            return HttpResponseRedirect(reverse('bot_hub'))
         else:
             return HttpResponse("Sorry - there was an error the system could not handle.")
             #messages.error(request, "Error")
@@ -89,24 +92,31 @@ def edit(request, cbot_id):
 @login_required
 def cbot_management(request, cbot_id):
     """ Displays the information page for a single chatbot """
-    context = {'chatbot' : cbot.objects.get(pk=cbot_id),
+    context = {'chatbot' : cbot.chatbot_manager.get(pk=cbot_id),
                'pandora' : pa,
-               'aiml_configs' : aiml_config.objects.user(request)}
+               'aiml_configs' : aiml_config.config_manager.user(request)}
     return render(request, 'chatbot_management.html', context)
+
+def tbot_management(request, cbot_id):
+    """ Displays the information page for a twitterbot """
+    context = {'twitterbot' : cbot.twitterbot_manager.get(pk=cbot_id),
+               'pandora'    : pa,
+               'aiml_configs' : aimml_config.config_manager.user(request)}
+    return render(request, 'twitterbot_management.html', context)
 
 @login_required
 def chatbot_add_setup(request, cbot_id, setup_id):
     """ Add a setup to the specified chatbot and redirect to next page up tree """
-    chatbot = cbot.objects.get(id=cbot_id)
-    setup = aiml_config.objects.get(id=setup_id)
+    chatbot = cbot.chatbot_manager.get(id=cbot_id)
+    setup = aiml_config.config_manager.get(id=setup_id)
     chatbot.aiml_config.add(setup)
     return HttpResponseRedirect(reverse('cbot_manage', args=[cbot_id]))  
 
 @login_required
 def chatbot_remove_setup(request, cbot_id, setup_id):
     """ Removes a setup to the specified chatbot and redirect to next page up tree """
-    chatbot = cbot.objects.get(id=cbot_id)
-    setup = aiml_config.objects.get(id=setup_id)
+    chatbot = cbot.chatbot_manager.get(id=cbot_id)
+    setup = aiml_config.config_manager.get(id=setup_id)
     chatbot.aiml_config.remove(setup)
     return HttpResponseRedirect(reverse('cbot_manage', args=[cbot_id]))
 
@@ -119,7 +129,7 @@ def chatbot_remove_setup(request, cbot_id, setup_id):
 @login_required
 def pandora_archive(request, cbot_id):
     """ Upload an archive file; normally accessed indirectly """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     if request.method == 'POST':
         form = PandoraUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -134,8 +144,8 @@ def upload_pandora_config(request, cbot_id):
     """ Upload the attached aiml configurations from the internal Setup database """
     try:
         
-        pa_name = cbot.objects.get(pk=cbot_id).pandora_name
-        configurations = cbot.objects.get(pk=cbot_id).get_attached_configurations()
+        pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
+        configurations = cbot.bot_manager.get(pk=cbot_id).get_attached_configurations()
         file_list = []
         for n in configurations:
             file_list = file_list + [n.get_file_paths()]
@@ -151,25 +161,25 @@ def upload_pandora_config(request, cbot_id):
 @login_required
 def create_pandora_bot(request, cbot_id):
     """ Creates or compiles a pandorabot using the currently specified name """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     return HttpResponse(pa.create_bot(pa_name))
 
 @login_required
 def download_pandora_bot(request, cbot_id):
     """ Downloads a copy of the files on pandora to a directory and outputs a link """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     return HttpResponse(pa.pandora_download(pa_name))
 
 @login_required
 def file_list_pandora_bot(request, cbot_id):
     """ Returns a list of the current files for a specific bot on pandora """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     return HttpResponse(pa.pandora_list_files_short(pa_name))
 
 @login_required
 def talk_pandora_bot(request, cbot_id):
     """ Query the pandora bot """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     context_instance=RequestContext(request)
     if request.method == 'POST':
         return HttpResponse( pa.pandora_talkto_bot(pa_name, request.POST['askbot']) )
@@ -178,7 +188,7 @@ def talk_pandora_bot(request, cbot_id):
 @login_required
 def delete_pandora_file(request, cbot_id):
     """ Delete a specific file on the pandora bots system """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     if request.method == 'POST':
         response = pa.pandora_delete_file(pa_name, request.POST['filename'])
         return HttpResponse( response ) ### Name of post variable required
@@ -187,7 +197,7 @@ def delete_pandora_file(request, cbot_id):
 @login_required
 def delete_all_pandora_file(request, cbot_id):
     """ Delete a specific file on the pandora bots system """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     response = pa.pandora_delete_all_files(pa_name)
     return HttpResponse(response)
 
@@ -195,7 +205,7 @@ def delete_all_pandora_file(request, cbot_id):
 @login_required
 def compile_pandora_bot(request, cbot_id):
     """ Additional compilation method """
-    pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+    pa_name = cbot.bot_manager.get(pk=cbot_id).pandora_name
     response = pa.pandora_compile_bot(pa_name)
     return HttpResponse(response)
 
@@ -206,16 +216,16 @@ def compile_pandora_bot(request, cbot_id):
 def chatbot_activate_toggle(request, cbot_id):
     """ Toggles the "Enabled" state of chatbot, i.e whether it should be run with cron """
     try:
-        chatbot = cbot.objects.get(pk=cbot_id)
-        chatbot.enabled = not cbot.objects.get(pk=cbot_id).enabled
+        chatbot = cbot.twitterbot_manager.get(pk=cbot_id)
+        chatbot.enabled = not cbot.twitterbot_manager.get(pk=cbot_id).enabled
         chatbot.save()
-        active = cbot.objects.get(pk=cbot_id).enabled
+        active = cbot.twitterbot_manager.get(pk=cbot_id).enabled
         if active:
             response = "activated"
         else:
             response = "deactivated"
         # And we'll compile here also, just to reduce the onus of responsibility on the user
-        pa_name = cbot.objects.get(pk=cbot_id).pandora_name
+        pa_name = cbot.twitterbot_manager.get(pk=cbot_id).pandora_name
         pa.pandora_compile_bot(pa_name)
         return HttpResponse("Chatbot has been " + response)
     except Exception, e:
@@ -239,10 +249,10 @@ def chatbot_get_chatlog(request, cbot_id):
 @login_required
 def check_twitter_auth(request, cbot_id):
     """ Return a user readable response on whether twitter details are active """
-    twitter_tk = cbot.objects.get(pk=cbot_id).twit_token
-    twitter_tk_s = cbot.objects.get(pk=cbot_id).twit_token_secret
-    twitter_c_k = cbot.objects.get(pk=cbot_id).twit_c_key
-    twitter_c_s = cbot.objects.get(pk=cbot_id).twit_c_secret
+    twitter_tk = cbot.twitterbot_manager.get(pk=cbot_id).twit_token
+    twitter_tk_s = cbot.twitterbot_manager.get(pk=cbot_id).twit_token_secret
+    twitter_c_k = cbot.twitterbot_manager.get(pk=cbot_id).twit_c_key
+    twitter_c_s = cbot.twitterbot_manager.get(pk=cbot_id).twit_c_secret
     try:
         import tweepy
         auth = tweepy.OAuthHandler(twitter_c_k, twitter_c_s)
@@ -260,17 +270,17 @@ def check_twitter_auth(request, cbot_id):
 @login_required
 def file_manager(request):
     """ Loads the file management page for deleting/viewing files """
-    userFiles =  aiml_file.objects.user(request)
+    userFiles =  aiml_file.file_manager.user(request)
     context = { 'aimls' : userFiles ,
-                'setup_files' : aiml_config.objects.user(request) }
+                'setup_files' : aiml_config.config_manager.user(request) }
     return render(request, "filemanagement/file_manager.html", context)
 
 @login_required
 def file_delete(request, file_id):
     """ Deletes a file """
     try:
-        filename = aiml_file.objects.get(id=file_id).get_simplename
-        file = aiml_file.objects.filter(id=file_id).delete()
+        filename = aiml_file.file_manager.get(id=file_id).get_simplename
+        file = aiml_file.file_manager.filter(id=file_id).delete()
         return HttpResponse("File Deleted: " + filename)
     except Exception,e: 
         return HttpResponse("We were unable to delete the file due to an error: " + str(e))
@@ -279,7 +289,7 @@ def file_delete(request, file_id):
 def file_delete_all(request):
     """ Deletes all files """
     try:
-        file = aiml_file.objects.user(request).delete()
+        file = aiml_file.file_manager.user(request).delete()
         return HttpResponse("All files deleted")
     except Exception,e: 
         return HttpResponse("We were unable to delete the files due to an error: " + str(e))
@@ -305,7 +315,7 @@ def file_add_new(request):
 ###################### AIML Wizard #############################
 def aiml_wizard(request):
     context = RequestContext(request)
-    context['aiml_configs'] = aiml_config.objects.user(request)
+    context['aiml_configs'] = aiml_config.config_manager.user(request)
     return render_to_response('aimlwizard/aiml_wizard_home.html', context)
 
 
